@@ -993,27 +993,31 @@ var WebsocketService = /** @class */ (function () {
         _state_events_service__WEBPACK_IMPORTED_MODULE_1__["EventsService"].dispatch({ type: _entities_EditorEvent__WEBPACK_IMPORTED_MODULE_2__["EditorEventType"].USER_UPDATE, data: patch });
     };
     WebsocketService.prototype.connectToPatchService = function (documentId) {
-        var _this = this;
-        var HOST = this.configState.getWSHost();
-        this.ws = new WebSocket(HOST);
-        this.ws.onopen = function () {
-            _this.sendWSMessage(_ui_editor_common_entities_WSMessages__WEBPACK_IMPORTED_MODULE_3__["WSMessages"].CONNECT, { documentId: documentId });
-            _this.connected = true;
-        };
-        this.ws.onmessage = function (e) {
-            console.log('got WS message:', e);
-            try {
-                var data = JSON.parse(e.data);
-                _this[data.type] && _this[data.type](data.data);
-            }
-            catch (err) {
-                console.warn('WS error:', err);
-            }
-        };
-        this.ws.onclose = function () {
-            console.log('closed');
-            _this.ws.close();
-        };
+	    try{
+			var _this = this;
+			var HOST = this.configState.getWSHost();
+			this.ws = new WebSocket(HOST);
+			this.ws.onopen = function () {
+			    _this.sendWSMessage(_ui_editor_common_entities_WSMessages__WEBPACK_IMPORTED_MODULE_3__["WSMessages"].CONNECT, { documentId: documentId });
+			    _this.connected = true;
+			};
+			this.ws.onmessage = function (e) {
+			    console.log('got WS message:', e);
+			    try {
+				var data = JSON.parse(e.data);
+				_this[data.type] && _this[data.type](data.data);
+			    }
+			    catch (err) {
+				console.warn('WS error:', err);
+			    }
+			};
+			this.ws.onclose = function () {
+			    console.log('closed');
+			    _this.ws.close();
+			};
+	    } catch(e){
+		    console.log("NOOOO",e);
+	    }
     };
     WebsocketService.prototype.disconnect = function () {
         this.ws.close();
